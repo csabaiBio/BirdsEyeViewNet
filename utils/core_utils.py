@@ -234,6 +234,7 @@ def train_loop_clam(epoch, model, loader, optimizer, n_classes, bag_weight, writ
     for batch_idx, (data, label) in enumerate(loader):
         data, label = data.to(device), label.to(device)
 
+        # print(data.shape) # should be [patch, embed] for TCGA was [patch. embed, 8,8]? why?
         logits, Y_prob, Y_hat, _, instance_dict = model(data, label=label, instance_eval=True)
 
         acc_logger.log(Y_hat, label)
