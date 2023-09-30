@@ -154,7 +154,7 @@ def sample_rois(scores, coords, k=5, mode='range_sample', seed=1, score_start=0.
 
     print(coords.shape)
     print(sampled_ids)
-    coords = coords[sampled_ids]
+    coords = coords[sampled_ids] #out of bounds.... FIG BUG TODO!
     scores = scores[sampled_ids]
 
     asset = {'sampled_coords': coords, 'sampled_scores': scores}

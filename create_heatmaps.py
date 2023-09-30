@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
 	# feature_extractor = resnet50_baseline(pretrained=True) #need to change here!!
 
-	feature_extractor = resnet_50_model_dino("../CNNs/FlockNet_2x/checkpoint0050.pth") #need to change here!!
+	feature_extractor = resnet_50_model_dino("/mnt/ncshare/ozkilim/lymphoma/CLAM/CNNs/meta_pretrained/dino_rn50_checkpoint.pth") #need to change depending on model.
 
 	feature_extractor.eval()
 	device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -362,6 +362,11 @@ if __name__ == '__main__':
 		coord_dset = file['coords']
 		scores = dset[:]
 		coords = coord_dset[:]
+
+
+		print("scores",scores.shape )
+		print("coords",coords.shape ) #this is too small...
+
 		file.close()
 
 		samples = sample_args.samples
@@ -371,8 +376,11 @@ if __name__ == '__main__':
 				sample_save_dir =  os.path.join(exp_args.production_save_dir, exp_args.save_exp_code, 'sampled_patches', str(tag), sample['name'])
 				os.makedirs(sample_save_dir, exist_ok=True)
 				print('sampling {}'.format(sample['name']))
+
 				sample_results = sample_rois(scores, coords, k=sample['k'], mode=sample['mode'], seed=sample['seed'], 
 					score_start=sample.get('score_start', 0), score_end=sample.get('score_end', 1))
+				
+
 				for idx, (s_coord, s_score) in enumerate(zip(sample_results['sampled_coords'], sample_results['sampled_scores'])):
 					print('coord: {} score: {:.3f}'.format(s_coord, s_score))
 					patch = wsi_object.wsi.read_region(tuple(s_coord), patch_args.patch_level, (patch_args.patch_size, patch_args.patch_size)).convert('RGB')
